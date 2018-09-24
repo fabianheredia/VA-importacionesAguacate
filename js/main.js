@@ -100,7 +100,7 @@ d3.json(_urlData).then((datos) => {
     svg.selectAll(".dot")
         .data(_listImp.dat)
         .enter().append("image")
-        .attr("xlink:href", "/img/avocado.png")
+        .attr("xlink:href", "https://fabianheredia.github.io/VA-importacionesAguacate/img/avocado.png")
         .attr("x", (d) => {
             let x = xScale(d.key) - 12;
             return x
