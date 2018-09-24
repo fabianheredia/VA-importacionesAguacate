@@ -5,10 +5,10 @@ const svg2 = d3.select(".grafico2")
     .append("g")
     .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
-const color = d3.scaleOrdinal(d3.schemeCategory10);
+const color = d3.scaleOrdinal(d3.schemeCategory10)
+                // .domain(_listImp.categoriaDep.key);
 
-
-const pie = d3.pie()
+let pie = d3.pie()
     .value(d => d.value)
     .sort(null);
 
@@ -26,21 +26,26 @@ function arcTween(a) {
 
 
 function update(datos) {
-    // Join new data
-    const path = svg2.selectAll("path")
-        .data(pie(datos));
+     // Join new data
+     const path = svg2.selectAll("path")
+     .data(pie(datos));
 
-    // Update existing arcs
-    path.transition().duration(200).attrTween("d", arcTween);
+ // Update existing arcs
+ path.transition().duration(200).attrTween("d", arcTween);
 
-    // Enter new arcs
-    path.enter().append("path")
-        .data(datos)
-        .attr("fill", (d) => color(d.key))
-        .attr("d", arc)
-        .attr("stroke", "white")
-        .attr("stroke-width", "6px")
-        .each(function (d) {
-            this._current = d;
-        });
+ // Enter new arcs
+ let pathEnter = path.enter().append("path");
+ path.merge(pathEnter)
+     // .data(datos)
+     .attr("fill", (d) => {
+
+         return color(d.data.key)
+     })
+     .attr("d", arc)
+     .attr("stroke", "white")
+     .attr("stroke-width", "6px")
+     .each(function (d) {
+         this._current = d;
+     });
+ path.exit().remove();
 }

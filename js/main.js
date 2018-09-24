@@ -23,6 +23,16 @@ d3.json(_urlData).then(datos => {
         return d3.sum(d, d => +d.vol_mentoneladas);
       })
       .sortKeys(d3.ascending)
+      .entries(datos),
+    categoriaDep: d3
+      .nest()
+      .key(d => {
+        return +d.departamentodestino;
+      })
+      .rollup(d => {
+        return d3.sum(d, d => +d.vol_mentoneladas);
+      })
+      .sortKeys(d3.ascending)
       .entries(datos)
   };
   //console.log(_listImp.dat)
@@ -57,11 +67,7 @@ d3.json(_urlData).then(datos => {
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   //se crea el nuevo espacio de trabajo
-  var svg2 = d3
-    .select(".grafico2")
-    .append("svg")
-    .append("g");
-  svg2.append("g");
+ 
 
   //agrego X
   svg
@@ -69,7 +75,7 @@ d3.json(_urlData).then(datos => {
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(xScale));
-  svg2.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+  
   //texto label en la linea
   var _textLine = svg
     .selectAll("text")
@@ -130,12 +136,13 @@ d3.json(_urlData).then(datos => {
     .attr("height", 24)
     .on("click", d => {
       //otra imagen
-      d3.select(".dot1").remove();
+      d3.select(".img2").remove();
       svg
         .selectAll(".dot1")
-        .data(d)
+        .data([d])
         .enter()
         .append("image")
+        .attr("class","img2")
         .attr(
           "xlink:href",
           "https://fabianheredia.github.io/VA-importacionesAguacate/img/avocado2.png"
@@ -171,10 +178,11 @@ d3.json(_urlData).then(datos => {
       d3.select(".info").remove();
       console.log(d);
       svg
-        .append("text")
+        .selectAll("text.info")
+        .data([d])
         .enter()
+        .append("text")
         .attr("class", "info")
-        .data(d)
         .attr("x", d => {
           let x = xScale(d.key) + 24;
           return x;
